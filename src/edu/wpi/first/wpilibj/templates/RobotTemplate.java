@@ -52,5 +52,6 @@ public class RobotTemplate extends SimpleRobot{
     
     public void test(){
             System.out.println("TEST MODE????");
+            System.out.println("bewp");
     }
 }
