@@ -1,41 +1,56 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) FIRST 2008. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package edu.wpi.first.wpilibj.templates;
 
-
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SimpleRobot;
+import edu.wpi.first.wpilibj.Victor;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the SimpleRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
-public class RobotTemplate extends SimpleRobot {
-    /**
-     * This function is called once each time the robot enters autonomous mode.
-     */
-    public void autonomous() {
+public class RobotTemplate extends SimpleRobot{
+    Victor vicky;
+    final double halfmaxvolt =  3.3/2;
+    final double deadspace = .05;
+    Victor vlad;
+    RobotDrive davd;
+    Joystick stick;
+    double aaron;
+    DriverStation diego;
+    public void robotInit(){
+        vicky = new Victor(2);
+        vlad = new Victor(3);
+        davd = new RobotDrive(vicky, vlad);
+        stick = new Joystick(1);
+        diego = DriverStation.getInstance();
+    }
+    
+    public void autonomous(){
         
     }
 
-    /**
-     * This function is called once each time the robot enters operator control.
-     */
-    public void operatorControl() {
-
+    public void operatorControl(){
+        while(isEnabled()){
+            if((stick.getY() != 0) && (potValueAdapter() != 0)){
+                davd.arcadeDrive(stick.getY(), potValueAdapter());
+            }
+            else{
+                davd.arcadeDrive(0, 0);
+            }
+        }
     }
     
-    /**
-     * This function is called once each time the robot enters test mode.
-     */
-    public void test() {
+    public double potValueAdapter(){
+        aaron = diego.getAnalogIn(1);
+        if(diego.getAnalogIn(1) >  halfmaxvolt + deadspace ||diego.getAnalogIn(1) < halfmaxvolt - deadspace){
+             aaron =  aaron - halfmaxvolt;
+             return aaron / halfmaxvolt;
+        }
+        else{
+            return 0;
+        }
+        
+    }
     
+    public void test(){
+            System.out.println("TEST MODE????");
     }
 }
